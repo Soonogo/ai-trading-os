@@ -7,28 +7,7 @@ services:
       POSTGRES_DB: aitos
     ports:
       - "5432:5432"
-    
-  backtest-engine:
-    build:
-      context: .
-      dockerfile: services/backtest-engine/Dockerfile
-    environment:
-      - NATS_URL=nats://nats:4222
-    depends_on:
-      nats:
-        condition: service_healthy
-
-  paper-trading:
-    build:
-      context: .
-      dockerfile: services/paper-trading/Dockerfile
-    environment:
-      - NATS_URL=nats://nats:4222
-    depends_on:
-      nats:
-        condition: service_healthy
-
-volumes:
+    volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U aitos -d aitos"]
@@ -40,28 +19,7 @@ volumes:
     image: redis:7-alpine
     ports:
       - "6379:6379"
-    
-  backtest-engine:
-    build:
-      context: .
-      dockerfile: services/backtest-engine/Dockerfile
-    environment:
-      - NATS_URL=nats://nats:4222
-    depends_on:
-      nats:
-        condition: service_healthy
-
-  paper-trading:
-    build:
-      context: .
-      dockerfile: services/paper-trading/Dockerfile
-    environment:
-      - NATS_URL=nats://nats:4222
-    depends_on:
-      nats:
-        condition: service_healthy
-
-volumes:
+    volumes:
       - redis_data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
@@ -74,28 +32,7 @@ volumes:
     ports:
       - "8123:8123"
       - "9000:9000"
-    
-  backtest-engine:
-    build:
-      context: .
-      dockerfile: services/backtest-engine/Dockerfile
-    environment:
-      - NATS_URL=nats://nats:4222
-    depends_on:
-      nats:
-        condition: service_healthy
-
-  paper-trading:
-    build:
-      context: .
-      dockerfile: services/paper-trading/Dockerfile
-    environment:
-      - NATS_URL=nats://nats:4222
-    depends_on:
-      nats:
-        condition: service_healthy
-
-volumes:
+    volumes:
       - clickhouse_data:/var/lib/clickhouse
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:8123/ping"]
@@ -108,28 +45,7 @@ volumes:
     ports:
       - "6333:6333"
       - "6334:6334"
-    
-  backtest-engine:
-    build:
-      context: .
-      dockerfile: services/backtest-engine/Dockerfile
-    environment:
-      - NATS_URL=nats://nats:4222
-    depends_on:
-      nats:
-        condition: service_healthy
-
-  paper-trading:
-    build:
-      context: .
-      dockerfile: services/paper-trading/Dockerfile
-    environment:
-      - NATS_URL=nats://nats:4222
-    depends_on:
-      nats:
-        condition: service_healthy
-
-volumes:
+    volumes:
       - qdrant_data:/qdrant/storage
     healthcheck:
       test: ["CMD-SHELL", "curl -fsS http://localhost:6333/healthz | grep -q ok"]
@@ -143,28 +59,7 @@ volumes:
     ports:
       - "4222:4222"
       - "8222:8222"
-    
-  backtest-engine:
-    build:
-      context: .
-      dockerfile: services/backtest-engine/Dockerfile
-    environment:
-      - NATS_URL=nats://nats:4222
-    depends_on:
-      nats:
-        condition: service_healthy
-
-  paper-trading:
-    build:
-      context: .
-      dockerfile: services/paper-trading/Dockerfile
-    environment:
-      - NATS_URL=nats://nats:4222
-    depends_on:
-      nats:
-        condition: service_healthy
-
-volumes:
+    volumes:
       - nats_data:/data/jetstream
     healthcheck:
       test: ["CMD-SHELL", "wget --spider -q http://localhost:8222/healthz"]
@@ -245,7 +140,6 @@ volumes:
     depends_on:
       nats:
         condition: service_healthy
-
 
   backtest-engine:
     build:
