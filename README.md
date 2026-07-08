@@ -104,7 +104,7 @@ cd services/event-bus
 go run .
 ```
 
-It listens on `http://localhost:8080` and exposes `/health` and `/ws`.
+It listens on `http://localhost:8080` and exposes `/health`, `/ws`, `/v1/events`, and `/v1/prompts`. OpenAPI docs are served at `/docs/openapi.yaml` and Swagger UI at `/swagger`.
 
 ### 6. Run AI and trading agents
 
