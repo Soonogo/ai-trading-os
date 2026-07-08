@@ -10,6 +10,7 @@ import (
 	"github.com/Soonogo/ai-trading-os/services/common/eventbus"
 	"github.com/Soonogo/ai-trading-os/services/event-bus/internal/config"
 	"github.com/Soonogo/ai-trading-os/services/event-bus/internal/websocket"
+	"github.com/Soonogo/ai-trading-os/services/event-bus/docs"
 	"github.com/gin-gonic/gin"
 )
 
@@ -39,6 +40,8 @@ func NewServer(cfg *config.Config, bus eventbus.Bus, hub *websocket.Hub) *Server
 	r.POST("/v1/events", s.handlePublish)
 	r.POST("/v1/prompts", s.handlePrompt)
 	r.GET("/v1/ws", s.handleWS)
+
+	docs.RegisterRoutes(r)
 
 	return s
 }

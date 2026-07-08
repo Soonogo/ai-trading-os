@@ -1,0 +1,247 @@
+openapi: 3.0.3
+info:
+  title: AITOS Event Bus Gateway
+  description: |
+    HTTP and WebSocket gateway for the AITOS multi-agent event bus.
+    Publishes canonical domain events to NATS JetStream and broadcasts
+    all events over WebSocket to connected clients.
+  version: 0.0.1
+  contact:
+    name: AITOS
+    url: https://github.com/Soonogo/ai-trading-os
+servers:
+  - url: http://localhost:8080
+    description: Local development
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      operationId: getHealth
+      tags:
+        - system
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+  /v1/events:
+    post:
+      summary: Publish a domain event
+      operationId: publishEvent
+      tags:
+        - events
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublishEventRequest'
+      responses:
+        '202':
+          description: Event accepted and published
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal publishing error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /v1/prompts:
+    post:
+      summary: Submit a natural-language prompt
+      operationId: submitPrompt
+      description: |
+        Converts a user prompt into a `portfolio.decision` event and
+        publishes it to the agent pipeline.
+      tags:
+        - prompts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PromptRequest'
+      responses:
+        '202':
+          description: Prompt dispatched
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromptResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal publishing error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /v1/ws:
+    get:
+      summary: WebSocket events stream
+      operationId: eventStream
+      description: |
+        Upgrade connection to WebSocket. All domain events published
+        to NATS JetStream are broadcast to connected clients in real time.
+      tags:
+        - websocket
+      responses:
+        '101':
+          description: Switching protocols to WebSocket
+
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          example: ok
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+
+    PublishEventRequest:
+      type: object
+      required:
+        - trace_id
+        - type
+        - source_agent
+        - payload
+      properties:
+        trace_id:
+          type: string
+          description: Correlation identifier for the agent trace.
+          example: 018f3d8a-5e1e-7c3a-8b2d-123456789abc
+        type:
+          type: string
+          description: Canonical event type constant.
+          example: backtest.request
+        source_agent:
+          type: string
+          description: Name of the agent publishing the event.
+          example: web-client
+        payload:
+          description: JSON-serializable event payload.
+          type: object
+        reasoning:
+          $ref: '#/components/schemas/Reasoning'
+
+    PromptRequest:
+      type: object
+      required:
+        - trace_id
+        - prompt
+        - user_id
+      properties:
+        trace_id:
+          type: string
+        prompt:
+          type: string
+          example: Find today's highest probability swing trades.
+        user_id:
+          type: string
+
+    PromptResponse:
+      type: object
+      required:
+        - trace_id
+        - status
+        - timestamp
+      properties:
+        trace_id:
+          type: string
+        status:
+          type: string
+          example: dispatched
+        timestamp:
+          type: string
+          format: date-time
+
+    Event:
+      type: object
+      required:
+        - event_id
+        - trace_id
+        - type
+        - version
+        - source_agent
+        - timestamp
+        - payload
+      properties:
+        event_id:
+          type: string
+        trace_id:
+          type: string
+        type:
+          type: string
+        version:
+          type: integer
+          example: 1
+        source_agent:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        reasoning:
+          $ref: '#/components/schemas/Reasoning'
+        payload:
+          type: object
+
+    Reasoning:
+      type: object
+      properties:
+        confidence:
+          type: number
+          format: float
+          example: 0.87
+        evidence:
+          type: array
+          items:
+            type: string
+        model_calls:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModelCall'
+        notes:
+          type: string
+
+    ModelCall:
+      type: object
+      properties:
+        provider:
+          type: string
+          example: openai
+        model:
+          type: string
+          example: gpt-4o
+        latency_ms:
+          type: integer
+        output:
+          type: string
