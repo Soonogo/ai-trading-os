@@ -1,0 +1,25 @@
+# Devin environment blueprint for ai-trading-os
+description: Monorepo setup for AITOS: Go 1.25, pnpm 10, Node 22, and Docker services.
+
+initialize:
+  - name: install go
+    run: |
+      if ! command -v go >/dev/null || [ "$(go version | awk '{print $3}')" != "go1.25.12" ]; then
+        curl -fsSL https://go.dev/dl/go1.25.12.linux-amd64.tar.gz | sudo tar -C /usr/local -xzf -
+        echo 'export PATH=/usr/local/go/bin:$PATH' >> /home/ubuntu/.bashrc
+      fi
+  - name: install pnpm
+    run: |
+      if ! command -v pnpm >/dev/null || [ "$(pnpm -v)" != "10.10.0" ]; then
+        curl -fsSL https://get.pnpm.io/install.sh | env PNPM_VERSION=10.10.0 bash -
+      fi
+  - name: install node
+    run: |
+      if ! command -v node >/dev/null || [ "$(node -v | cut -c2-)" != "22" ]; then
+        curl -fsSL https://nodejs.org/dist/v22.18.0/node-v22.18.0-linux-x64.tar.xz | tar -C /home/ubuntu/.local -xJ -
+        echo 'export PATH=/home/ubuntu/.local/node-v22.18.0-linux-x64/bin:$PATH' >> /home/ubuntu/.bashrc
+      fi
+
+knowledge:
+  - type: prerequisite
+    description: Run `pnpm install` and `pnpm go:build` after cloning.

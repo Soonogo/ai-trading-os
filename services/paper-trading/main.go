@@ -6,10 +6,10 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/Soonogo/ai-trading-os/services/backtest-engine/internal/config"
-	"github.com/Soonogo/ai-trading-os/services/backtest-engine/internal/ports"
 	cd "github.com/Soonogo/ai-trading-os/services/common/domain"
 	"github.com/Soonogo/ai-trading-os/services/common/eventbus"
+	"github.com/Soonogo/ai-trading-os/services/paper-trading/internal/config"
+	"github.com/Soonogo/ai-trading-os/services/paper-trading/internal/ports"
 )
 
 func main() {
@@ -18,7 +18,7 @@ func main() {
 		log.Fatalf("load config: %v", err)
 	}
 
-	bus, err := eventbus.NewNATSBus(cfg.NATSURL, "backtest-engine")
+	bus, err := eventbus.NewNATSBus(cfg.NATSURL, "paper-trading")
 	if err != nil {
 		log.Fatalf("event bus: %v", err)
 	}
@@ -29,10 +29,10 @@ func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer cancel()
 
-	if err := bus.Subscribe(ctx, []cd.EventType{cd.EventTypeBacktestRequest}, handler.HandleEvent); err != nil {
+	if err := bus.Subscribe(ctx, []cd.EventType{cd.EventTypePaperOrder, cd.EventTypeMarketData}, handler.HandleEvent); err != nil {
 		log.Fatalf("subscribe: %v", err)
 	}
 
 	<-ctx.Done()
-	log.Println("backtest-engine stopped")
+	log.Println("paper-trading stopped")
 }

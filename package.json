@@ -2,7 +2,7 @@
   "name": "ai-trading-os",
   "private": true,
   "version": "0.0.1",
-  "packageManager": "pnpm@11.10.0",
+  "packageManager": "pnpm@10.10.0",
   "engines": {
     "node": ">=20.0.0"
   },

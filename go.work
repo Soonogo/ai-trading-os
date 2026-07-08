@@ -15,4 +15,5 @@ use (
 	./services/reflection-agent
 	./services/report-agent
 	./services/backtest-engine
+	./services/paper-trading
 )
