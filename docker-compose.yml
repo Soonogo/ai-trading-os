@@ -62,13 +62,50 @@ services:
     volumes:
       - nats_data:/data/jetstream
     healthcheck:
-      test: ["CMD", "nats", "server", "check", "-s", "$${{SERVER_NAME}}"]
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:8222/healthz"]
       interval: 5s
       timeout: 5s
       retries: 10
+
+  event-bus:
+    build:
+      context: .
+      dockerfile: services/event-bus/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - HTTP_ADDR=:8080
+      - NATS_URL=nats://nats:4222
+    depends_on:
+      nats:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  model-router:
+    build:
+      context: .
+      dockerfile: services/model-router/Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      - HTTP_ADDR=:8082
+      - NATS_URL=nats://nats:4222
+    depends_on:
+      nats:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:8082/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:
   redis_data:
   clickhouse_data:
   qdrant_data:
+  nats_data:

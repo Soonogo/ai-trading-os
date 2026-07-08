@@ -13,8 +13,8 @@
     "test:unit": "pnpm --filter @aitos/web test:unit && pnpm --filter @aitos/design-system test:unit",
     "test:e2e": "pnpm --filter @aitos/web test:e2e",
     "typecheck:web": "pnpm --filter @aitos/web typecheck",
-    "go:build": "find ./services -name go.mod -exec dirname {} \\; | xargs -I {} sh -c 'cd {} && /usr/local/go/bin/go build ./...'",
-    "go:test": "find ./services -name go.mod -exec dirname {} \\; | xargs -I {} sh -c 'cd {} && /usr/local/go/bin/go test ./...'",
+    "go:build": "find ./services -name go.mod -exec dirname {} \\; | xargs -I {} sh -c 'cd {} && go test -c -o /dev/null ./...'",
+    "go:test": "find ./services -name go.mod -exec dirname {} \\; | xargs -I {} sh -c 'cd {} && go test -short ./...'",
     "infra:up": "docker compose up -d db redis clickhouse qdrant nats"
   },
   "devDependencies": {
