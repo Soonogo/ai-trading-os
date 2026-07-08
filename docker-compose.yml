@@ -94,6 +94,9 @@ services:
     environment:
       - HTTP_ADDR=:8082
       - NATS_URL=nats://nats:4222
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
     depends_on:
       nats:
         condition: service_healthy
@@ -102,6 +105,20 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  research-agent:
+    build:
+      context: .
+      dockerfile: services/research-agent/Dockerfile
+    environment:
+      - NATS_URL=nats://nats:4222
+      - QDRANT_URL=http://qdrant:6333
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+    depends_on:
+      nats:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
 
 volumes:
   postgres_data:
