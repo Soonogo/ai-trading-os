@@ -1,10 +1,5 @@
-import { Shell } from '@/components/shell';
-import { PageRouter } from '@/components/page-router';
+import { redirect } from 'next/navigation';
 
 export default function Home() {
-  return (
-    <Shell>
-      <PageRouter />
-    </Shell>
-  );
+  redirect('/dashboard');
 }

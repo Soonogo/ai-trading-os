@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   Search,
@@ -14,25 +16,26 @@ import {
   Settings,
   type LucideIcon,
 } from 'lucide-react';
-import { useUI, type AppPage } from '@/stores/ui-store';
+import { useUI } from '@/stores/ui-store';
 import { cn } from '@/lib/utils';
 
-const nav: { page: AppPage; label: string; icon: LucideIcon }[] = [
-  { page: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { page: 'research', label: 'Research', icon: Search },
-  { page: 'markets', label: 'Markets', icon: BarChart3 },
-  { page: 'portfolio', label: 'Portfolio', icon: Briefcase },
-  { page: 'strategies', label: 'Strategies', icon: GitBranch },
-  { page: 'agents', label: 'Agents', icon: Bot },
-  { page: 'competitions', label: 'Competitions', icon: Trophy },
-  { page: 'reports', label: 'Reports', icon: FileText },
-  { page: 'prompt-studio', label: 'Prompt Studio', icon: Terminal },
-  { page: 'model-router', label: 'Model Router', icon: GitCompare },
-  { page: 'settings', label: 'Settings', icon: Settings },
+const nav: { href: string; label: string; icon: LucideIcon }[] = [
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/research', label: 'Research', icon: Search },
+  { href: '/markets', label: 'Markets', icon: BarChart3 },
+  { href: '/portfolio', label: 'Portfolio', icon: Briefcase },
+  { href: '/strategies', label: 'Strategies', icon: GitBranch },
+  { href: '/agents', label: 'Agents', icon: Bot },
+  { href: '/competitions', label: 'Competitions', icon: Trophy },
+  { href: '/reports', label: 'Reports', icon: FileText },
+  { href: '/prompt-studio', label: 'Prompt Studio', icon: Terminal },
+  { href: '/model-router', label: 'Model Router', icon: GitCompare },
+  { href: '/settings', label: 'Settings', icon: Settings },
 ];
 
 export function Sidebar() {
-  const { sidebarOpen, currentPage, setPage, toggleSidebar } = useUI();
+  const { sidebarOpen, toggleSidebar } = useUI();
+  const pathname = usePathname();
 
   return (
     <aside
@@ -41,30 +44,33 @@ export function Sidebar() {
         sidebarOpen ? 'w-60' : 'w-16'
       )}
     >
-      <div className="flex h-16 items-center gap-3 px-4 border-b border-white/[0.06]">
+      <Link href="/dashboard" className="flex h-16 items-center gap-3 px-4 border-b border-white/[0.06]">
         <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center text-sm font-bold text-white">
           A
         </div>
         {sidebarOpen && (
           <span className="text-lg font-semibold tracking-tight">AITOS</span>
         )}
-      </div>
+      </Link>
       <nav className="flex flex-col gap-1 p-2">
-        {nav.map((item) => (
-          <button
-            key={item.page}
-            onClick={() => setPage(item.page)}
-            className={cn(
-              'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
-              currentPage === item.page
-                ? 'bg-primary/10 text-primary'
-                : 'text-muted-foreground hover:bg-white/[0.04] hover:text-foreground'
-            )}
-          >
-            <item.icon className="h-5 w-5 shrink-0" />
-            {sidebarOpen && <span>{item.label}</span>}
-          </button>
-        ))}
+        {nav.map((item) => {
+          const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
+                active
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-muted-foreground hover:bg-white/[0.04] hover:text-foreground'
+              )}
+            >
+              <item.icon className="h-5 w-5 shrink-0" />
+              {sidebarOpen && <span>{item.label}</span>}
+            </Link>
+          );
+        })}
       </nav>
       <button
         onClick={toggleSidebar}
