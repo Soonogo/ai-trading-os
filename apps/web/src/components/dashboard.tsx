@@ -4,7 +4,6 @@ import { Activity, DollarSign, Brain, Shield } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@aitos/design-system';
 import { MarketChart } from './market-chart';
-import { useUI } from '@/stores/ui-store';
 import { cn } from '@/lib/utils';
 
 const stats = [
@@ -22,13 +21,11 @@ const agents = [
 ];
 
 export function Dashboard() {
-  const { currentPage } = useUI();
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">{currentPage}</h1>
+          <h1 className="text-3xl font-semibold tracking-tight">Dashboard</h1>
           <p className="text-muted-foreground">Autonomous market intelligence for {new Date().toLocaleDateString()}.</p>
         </div>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
