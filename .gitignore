@@ -1,0 +1,30 @@
+# Node
+node_modules/
+.pnp
+dist/
+.next/
+out/
+*.tsbuildinfo
+.pnpm-store/
+
+# Go
+*.exe
+*.test
+*.prof
+bin/
+
+# Env
+.env
+.env.*.local
+
+# OS
+.DS_Store
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Secrets
+/run/repo_secrets/

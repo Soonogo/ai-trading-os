@@ -1,0 +1,18 @@
+go 1.25.0
+
+use (
+	./services/common
+	./services/event-bus
+	./services/model-router
+	./services/research-agent
+	./services/macro-agent
+	./services/news-agent
+	./services/technical-analysis-agent
+	./services/fundamental-agent
+	./services/risk-agent
+	./services/portfolio-manager-agent
+	./services/execution-agent
+	./services/reflection-agent
+	./services/report-agent
+	./services/backtest-engine
+)

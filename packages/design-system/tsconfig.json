@@ -1,0 +1,18 @@
+{
+  "extends": "@aitos/tsconfig/base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true
+  },
+  "include": [
+    "src/**/*",
+    "tailwind.preset.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

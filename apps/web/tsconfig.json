@@ -1,0 +1,25 @@
+{
+  "extends": "@aitos/tsconfig/base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@aitos/design-system": ["../../packages/design-system/src/index.ts"],
+      "@aitos/design-system/*": ["../../packages/design-system/src/*"],
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
