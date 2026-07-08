@@ -120,6 +120,27 @@ services:
       qdrant:
         condition: service_healthy
 
+  portfolio-manager-agent:
+    build:
+      context: .
+      dockerfile: services/portfolio-manager-agent/Dockerfile
+    environment:
+      - NATS_URL=nats://nats:4222
+    depends_on:
+      nats:
+        condition: service_healthy
+
+  execution-agent:
+    build:
+      context: .
+      dockerfile: services/execution-agent/Dockerfile
+    environment:
+      - NATS_URL=nats://nats:4222
+      - PAPER_TRADING=${PAPER_TRADING:-true}
+    depends_on:
+      nats:
+        condition: service_healthy
+
 volumes:
   postgres_data:
   redis_data:
