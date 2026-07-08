@@ -13,23 +13,27 @@ import (
 type EventType string
 
 const (
-	EventTypeMarketData       EventType = "market.data"
-	EventTypeResearchSignal   EventType = "research.signal"
-	EventTypeMacroSignal      EventType = "macro.signal"
-	EventTypeNewsSignal       EventType = "news.signal"
-	EventTypeTechnicalSignal  EventType = "technical.signal"
+	EventTypeMarketData        EventType = "market.data"
+	EventTypeResearchSignal    EventType = "research.signal"
+	EventTypeMacroSignal       EventType = "macro.signal"
+	EventTypeNewsSignal        EventType = "news.signal"
+	EventTypeTechnicalSignal   EventType = "technical.signal"
 	EventTypeFundamentalSignal EventType = "fundamental.signal"
-	EventTypeRiskSignal       EventType = "risk.signal"
+	EventTypeRiskSignal        EventType = "risk.signal"
 	EventTypePortfolioDecision EventType = "portfolio.decision"
-	EventTypeOrderSubmitted   EventType = "execution.order.submitted"
-	EventTypeOrderFilled      EventType = "execution.order.filled"
-	EventTypeReflectionReport EventType = "reflection.report"
-	EventTypeDailyReport      EventType = "report.daily"
+	EventTypeOrderSubmitted    EventType = "execution.order.submitted"
+	EventTypeOrderFilled       EventType = "execution.order.filled"
+	EventTypeReflectionReport  EventType = "reflection.report"
+	EventTypeDailyReport       EventType = "report.daily"
+	EventTypeBacktestRequest   EventType = "backtest.request"
+	EventTypeBacktestResult    EventType = "backtest.result"
+	EventTypePaperOrder        EventType = "paper.order"
+	EventTypePaperFill         EventType = "paper.fill"
 )
 
 // AllowedTypes is the set of valid event type constants.
 var AllowedTypes = map[EventType]bool{
-	EventTypeMarketData:          true,
+	EventTypeMarketData:        true,
 	EventTypeResearchSignal:    true,
 	EventTypeMacroSignal:       true,
 	EventTypeNewsSignal:        true,
@@ -41,6 +45,10 @@ var AllowedTypes = map[EventType]bool{
 	EventTypeOrderFilled:       true,
 	EventTypeReflectionReport:  true,
 	EventTypeDailyReport:       true,
+	EventTypeBacktestRequest:   true,
+	EventTypeBacktestResult:    true,
+	EventTypePaperOrder:        true,
+	EventTypePaperFill:         true,
 }
 
 // Event is the canonical envelope for all cross-service messages.
@@ -57,10 +65,10 @@ type Event struct {
 
 // Reasoning records why a decision was made.
 type Reasoning struct {
-	Confidence   float64  `json:"confidence"`
-	Evidence     []string `json:"evidence"`
-	ModelCalls   []ModelCall `json:"model_calls,omitempty"`
-	Notes        string   `json:"notes,omitempty"`
+	Confidence float64     `json:"confidence"`
+	Evidence   []string    `json:"evidence"`
+	ModelCalls []ModelCall `json:"model_calls,omitempty"`
+	Notes      string      `json:"notes,omitempty"`
 }
 
 // ModelCall captures one LLM invocation.

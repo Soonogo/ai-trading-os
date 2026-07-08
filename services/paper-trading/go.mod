@@ -1,4 +1,4 @@
-module github.com/Soonogo/ai-trading-os/services/backtest-engine
+module github.com/Soonogo/ai-trading-os/services/paper-trading
 
 go 1.25.0
 
